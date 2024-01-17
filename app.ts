@@ -8,20 +8,32 @@ const app = express();
 
 app.use(bodyParser.json());
 
+// IP 주소 확인
+app.use((req: Request, res: Response, next: NextFunction) => {
+  const clientIP: any = req.ip;
+  const allowedIP = config.allow_ip.split(',');
+
+  if (allowedIP?.includes(clientIP)) {
+    next();
+  } else {
+    res.status(403).send('Access Denied'); // 접근 거부
+  }
+});
+
+// error
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  console.error(err);
+  // ❌
+  res.status(500).send('Server Error');
+});
+
 app.post('/webhook', (req: Request, res: Response, next: NextFunction) => {
   try {
     const payload = req.body;
 
-    // repository name
     const repositoryName = payload.repository.full_name;
-
-    // commit
     const commits = payload.head_commit;
-
-    // committer
     const committer = commits.committer.name;
-
-    // commit message
     const commitMessage = commits.message;
 
     const added = commits.added;
@@ -35,20 +47,13 @@ app.post('/webhook', (req: Request, res: Response, next: NextFunction) => {
     // const template = `[✅ Received a Webhook - ${config.version}]\n\nRepository: ${repositoryName}\nCommit: Commit by 🧑‍💻${committer}: [${commitMessage}]\n\n${addedSection}\n\n${modifiedSection}\n\n${removedSection}`;
 
     sendTelegram(`
-      [✅ Received a Webhook - ${config.version}]\n\nRepository: ${repositoryName}\nCommit: Commit by 🧑‍💻${committer}: [${commitMessage}]\n\n${addedSection}\n\n${modifiedSection}\n\n${removedSection}\n\n
+      \n\n[✅ Received a Webhook - ${config.version}]\n\nRepository: ${repositoryName}\nCommit by 🧑‍💻${committer}: [${commitMessage}]\n\n${addedSection}\n\n${modifiedSection}\n\n${removedSection}\n\n
     `);
 
     res.status(200).send('Webhook received!');
   } catch (error) {
     next(error);
   }
-});
-
-// error
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  console.error(err);
-  // ❌
-  res.status(500).send('Server Error');
 });
 
 // 서버 시작
