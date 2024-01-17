@@ -1,8 +1,6 @@
 import dotenv from 'dotenv';
 
-dotenv.config({
-  path: `${__dirname}/.env`,
-});
+dotenv.config();
 
 export default {
   version: 'v0.0.1',
