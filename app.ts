@@ -1,4 +1,5 @@
 import bodyParser from 'body-parser';
+import cors from 'cors';
 import express, { NextFunction, Request, Response } from 'express';
 import config from './config';
 import { formatSection } from './utils/formatSection';
@@ -6,6 +7,12 @@ import { sendTelegram } from './utils/sendTelegram';
 
 const app = express();
 
+const corsOption = {
+  origin: true,
+  credentials: true,
+};
+
+app.use(cors(corsOption));
 app.use(bodyParser.json());
 
 // IP 주소 확인

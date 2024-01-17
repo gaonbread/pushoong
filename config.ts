@@ -4,11 +4,9 @@ dotenv.config({
   path: `${__dirname}/.env`,
 });
 
-const port = 4002;
-
 export default {
   version: 'v0.0.1',
-  port,
+  port: process.env.PORT || 3000,
   allow_ip: process.env.ALLOW_IP || '',
   telegram: {
     bot_token: process.env.BOT_TOKEN || '',
