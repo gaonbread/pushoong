@@ -34,6 +34,10 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   res.status(500).send('Server Error');
 });
 
+app.get('/', (req, res, next) => {
+  return res.status(200).send({ message: 'Hello World' });
+});
+
 app.post('/webhook', (req: Request, res: Response, next: NextFunction) => {
   try {
     const payload = req.body;
