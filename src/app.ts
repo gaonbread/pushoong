@@ -18,6 +18,8 @@ app.use(bodyParser.json());
 // IP 주소 확인
 app.use((req: Request, res: Response, next: NextFunction) => {
   const clientIP: any = req.ip;
+
+  console.log('🧑‍💻 client IP: ', clientIP);
   const allowedIP = config.allow_ip.split(',');
 
   if (allowedIP?.includes(clientIP)) {
