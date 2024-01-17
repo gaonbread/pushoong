@@ -1,6 +1,8 @@
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import express, { NextFunction, Request, Response } from 'express';
+import requestIp from 'request-ip';
+
 import config from './config';
 import { formatSection } from './utils/formatSection';
 import { sendTelegram } from './utils/sendTelegram';
@@ -17,9 +19,11 @@ app.use(bodyParser.json());
 
 // IP 주소 확인
 app.use((req: Request, res: Response, next: NextFunction) => {
-  const clientIP: any = req.ip;
+  // const clientIP: any = req.ip;
+  const clientIP: any = requestIp.getClientIp(req);
 
   console.log('🧑‍💻 client IP: ', clientIP);
+
   const allowedIP = config.allow_ip.split(',');
 
   if (allowedIP?.includes(clientIP)) {
