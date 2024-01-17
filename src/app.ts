@@ -1,7 +1,6 @@
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import express, { NextFunction, Request, Response } from 'express';
-import requestIp from 'request-ip';
 
 import config from './config';
 import { formatSection } from './utils/formatSection';
@@ -18,20 +17,19 @@ app.use(cors(corsOption));
 app.use(bodyParser.json());
 
 // IP 주소 확인
-app.use((req: Request, res: Response, next: NextFunction) => {
-  // const clientIP: any = req.ip;
-  const clientIP: any = requestIp.getClientIp(req);
+// app.use((req: Request, res: Response, next: NextFunction) => {
+//   const clientIP: any = requestIp.getClientIp(req);
 
-  console.log('🧑‍💻 client IP: ', clientIP);
+//   console.log('🧑‍💻 client IP: ', clientIP);
 
-  const allowedIP = config.allow_ip.split(',');
+//   const allowedIP = config.allow_ip.split(',');
 
-  if (allowedIP?.includes(clientIP)) {
-    next();
-  } else {
-    res.status(403).send('Access Denied'); // 접근 거부
-  }
-});
+//   if (allowedIP?.includes(clientIP)) {
+//     next();
+//   } else {
+//     res.status(403).send('Access Denied'); // 접근 거부
+//   }
+// });
 
 // error
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
