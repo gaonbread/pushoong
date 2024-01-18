@@ -62,7 +62,7 @@ app.post('/webhook', (req: Request, res: Response, next: NextFunction) => {
     // const template = `[✅ Received a Webhook - ${config.version}]\n\nRepository: ${repositoryName}\nCommit: Commit by 🧑‍💻${committer}: [${commitMessage}]\n\n${addedSection}\n\n${modifiedSection}\n\n${removedSection}`;
 
     sendTelegram(`
-      \n\n[✅ Received a Webhook - ${config.version}]\n\nRepository: ${repositoryName}\nCommit by 🧑‍💻${committer}: [${commitMessage}]\n\n${addedSection}\n\n${modifiedSection}\n\n${removedSection}\n\n
+      \n\n[✅ Received a Webhook - ${config.version}]\n\nRepository: ${repositoryName}\n\nCommit by 🧑‍💻${committer}\n[${commitMessage}]\n\n${addedSection}\n\n${modifiedSection}\n\n${removedSection}\n\n
     `);
 
     res.status(200).send('Webhook received!');
