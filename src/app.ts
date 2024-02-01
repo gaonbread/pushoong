@@ -24,19 +24,11 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   console.log('🧑‍💻 client IP: ', clientIP);
 
   next();
-  // const allowedIP = config.allow_ip.split(',');
-
-  // if (allowedIP?.includes(clientIP)) {
-  //   next();
-  // } else {
-  //   res.status(403).send('Access Denied'); // 접근 거부
-  // }
 });
 
 // error
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error(err);
-  // ❌
   res.status(500).send('Server Error');
 });
 
@@ -46,6 +38,8 @@ app.get('/', (req, res, next) => {
 
 app.post('/webhook', (req: Request, res: Response, next: NextFunction) => {
   try {
+    console.log('res:::: ', res);
+
     const payload = req.body;
 
     const repositoryName = payload.repository.full_name;
