@@ -49,13 +49,9 @@ app.post(
     try {
       const payload = req.body;
 
-      const repository = await Repository.findOne({
-        name: req.body.repository.full_name,
-      });
+      const repositoryName = payload.repository.name;
+      const repositoryFullName = payload.repository.full_name;
 
-      console.log('repository: ', repository);
-
-      const repositoryName = payload.repository.full_name;
       const commits = payload.head_commit;
       const committer = commits.committer.name;
       const commitMessage = commits.message;
@@ -68,17 +64,22 @@ app.post(
       const modifiedSection = formatSection(modified, '✨ Changed Files');
       const removedSection = formatSection(removed, '🔥 Removed Files');
 
-      sendTelegram(
-        repository?.chat_id,
-        `
-        \n\n[✅ Received a Webhook - ${config.version}]\n\nRepository: ${repositoryName}\n\nCommit by 🧑‍💻${committer}\n[${commitMessage}]\n\n${addedSection}\n\n${modifiedSection}\n\n${removedSection}\n\n
-      `,
-      );
-      res.status(200).send('Webhook received!');
+      const repository = await Repository.findOne({
+        name: repositoryName,
+      })
+        .then((repo) => {
+          sendTelegram(
+            repo?.chat_id,
+            `
+          \n\n[✅ Received a Webhook - ${config.version}]\n\nRepository: ${repositoryFullName}\n\nCommit by 🧑‍💻${committer}\n[${commitMessage}]\n\n${addedSection}\n\n${modifiedSection}\n\n${removedSection}\n\n
+        `,
+          );
+        })
+        .catch((err) => {
+          console.log('repository error: ', err);
+        });
 
-      //   `
-      //   \n\n[✅ Received a Webhook - ${config.version}]\n\nRepository: ${repositoryName}\n\nCommit by 🧑‍💻${committer}\n[${commitMessage}]\n\n${addedSection}\n\n${modifiedSection}\n\n${removedSection}\n\n
-      // `,
+      res.status(200).send('Webhook received!');
     } catch (error) {
       next(error);
     }

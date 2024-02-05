@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start:dev": "ts-node src/app.ts",
+    "start:dev": "nodemon --exec ts-node src/app.ts",
     "start": "node dist/app.js",
     "build": "tsc",
     "postinstall": "npm run build",
@@ -19,6 +19,7 @@
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "mongoose": "^8.1.1",
+    "nodemon": "^3.0.3",
     "request-ip": "^3.3.0"
   },
   "devDependencies": {
