@@ -8,8 +8,8 @@ export const sendTelegram = (chatId: any, text: string) => {
     `https://api.telegram.org/bot${config.telegram.bot_token}/sendMessage`,
     {
       params: {
-        // chat_id: config.telegram.chat_id,
-        chat_id: chatId,
+        chat_id: config.telegram.chat_id,
+        // chat_id: chatId,
         text: text,
       },
     },

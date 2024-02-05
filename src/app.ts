@@ -49,12 +49,16 @@ app.post(
     try {
       const payload = req.body;
 
+      const repository = await Repository.findOne({
+        name: req.body.repository.full_name,
+      });
+
+      console.log('repository: ', repository);
+
       const repositoryName = payload.repository.full_name;
       const commits = payload.head_commit;
       const committer = commits.committer.name;
       const commitMessage = commits.message;
-
-      const repository = await Repository.findOne({ name: repositoryName });
 
       const added = commits.added;
       const modified = commits.modified;
