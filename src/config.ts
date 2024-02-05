@@ -10,4 +10,5 @@ export default {
     bot_token: process.env.BOT_TOKEN || '',
     chat_id: process.env.CHAT_ID || '',
   },
+  mongo_uri: process.env.MONGO_URI || '',
 };
