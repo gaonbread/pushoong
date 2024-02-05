@@ -77,6 +77,11 @@ app.post(
         );
         res.status(200).send('Webhook received!');
       } else {
+        sendTelegram(
+          config.telegram.chat_id,
+          `❌ Failed to send webhook \n\n ${repositoryName}`,
+        );
+        console.log(`❌ Failed to send webhook \n\n ${repositoryName}`);
         res.status(404).send('Repository not found'); // 저장소를 찾을 수 없는 경우
       }
     } catch (error) {
