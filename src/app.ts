@@ -38,14 +38,20 @@ app.get('/', (req, res, next) => {
 
 app.post('/webhook', (req: Request, res: Response, next: NextFunction) => {
   try {
-    console.log('res:::: ', res);
-
     const payload = req.body;
 
     const repositoryName = payload.repository.full_name;
     const commits = payload.head_commit;
     const committer = commits.committer.name;
     const commitMessage = commits.message;
+
+    console.log('payload::::::: ', payload);
+    console.log('\n\n');
+    console.log('repository name: ', repositoryName);
+    console.log('\n\n');
+    console.log('commits:::: ', commits);
+    console.log('\n\n');
+    console.log('commit message: ', commitMessage);
 
     const added = commits.added;
     const modified = commits.modified;
