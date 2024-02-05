@@ -64,26 +64,17 @@ app.post(
       const modifiedSection = formatSection(modified, '✨ Changed Files');
       const removedSection = formatSection(removed, '🔥 Removed Files');
 
-      if (repository) {
-        //   `
-        //   \n\n[✅ Received a Webhook - ${config.version}]\n\nRepository: ${repositoryName}\n\nCommit by 🧑‍💻${committer}\n[${commitMessage}]\n\n${addedSection}\n\n${modifiedSection}\n\n${removedSection}\n\n
-        // `,
+      sendTelegram(
+        repository?.chat_id,
+        `
+        \n\n[✅ Received a Webhook - ${config.version}]\n\nRepository: ${repositoryName}\n\nCommit by 🧑‍💻${committer}\n[${commitMessage}]\n\n${addedSection}\n\n${modifiedSection}\n\n${removedSection}\n\n
+      `,
+      );
+      res.status(200).send('Webhook received!');
 
-        sendTelegram(
-          repository?.chat_id,
-          `
-          \n\n[✅ Received a Webhook - ${config.version}]\n\nRepository: ${repositoryName}\n\nCommit by 🧑‍💻${committer}\n[${commitMessage}]\n\n${addedSection}\n\n${modifiedSection}\n\n${removedSection}\n\n
-        `,
-        );
-        res.status(200).send('Webhook received!');
-      } else {
-        sendTelegram(
-          config.telegram.chat_id,
-          `❌ Failed to send webhook \n\n ${repositoryName}`,
-        );
-        console.log(`❌ Failed to send webhook \n\n ${repositoryName}`);
-        res.status(404).send('Repository not found'); // 저장소를 찾을 수 없는 경우
-      }
+      //   `
+      //   \n\n[✅ Received a Webhook - ${config.version}]\n\nRepository: ${repositoryName}\n\nCommit by 🧑‍💻${committer}\n[${commitMessage}]\n\n${addedSection}\n\n${modifiedSection}\n\n${removedSection}\n\n
+      // `,
     } catch (error) {
       next(error);
     }
