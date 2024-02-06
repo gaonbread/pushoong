@@ -53,7 +53,7 @@ app.post(
       const repositoryFullName = payload.repository.full_name;
 
       const commits = payload.head_commit;
-      const committer = commits.committer.name;
+      const committer = commits.committer.name || 'GitHub';
       const commitMessage = commits.message;
 
       const added = commits.added;
