@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export default {
-  version: 'v0.0.2',
+  version: 'v0.0.3',
   port: process.env.PORT || 3000,
   allow_ip: process.env.ALLOW_IP || '',
   telegram: {

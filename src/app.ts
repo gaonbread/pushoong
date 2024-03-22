@@ -55,14 +55,26 @@ app.post(
       const commits = payload.head_commit;
       const committer = commits.committer.name || 'GitHub';
       const commitMessage = commits.message;
+      const url = commits.url;
 
       const added = commits.added;
       const modified = commits.modified;
       const removed = commits.removed;
 
-      const addedSection = formatSection(added, '📣 Added Files');
-      const modifiedSection = formatSection(modified, '✨ Changed Files');
-      const removedSection = formatSection(removed, '🔥 Removed Files');
+      const addedSection =
+        added.length > 0
+          ? `\n\n\n${formatSection(added, '📣 Added Files')}`
+          : '';
+      const modifiedSection =
+        modified.length > 0
+          ? `\n\n\n${formatSection(modified, '✨ Changed Files')}`
+          : '';
+      const removedSection =
+        removed.length > 0
+          ? `\n\n\n${formatSection(removed, '🔥 Removed Files')}`
+          : '';
+
+      const relevantLink = url ? `\n\n\n🔗 Relevant Links\n${url}` : '';
 
       const repository = await Repository.findOne({
         name: repositoryName,
@@ -71,7 +83,7 @@ app.post(
           sendTelegram(
             repo?.chat_id,
             `
-          \n\n[✅ Received a Webhook - ${config.version}]\n\nRepository: ${repositoryFullName}\n\nCommit by 🧑‍💻${committer}\n[${commitMessage}]\n\n${addedSection}\n\n${modifiedSection}\n\n${removedSection}\n\n
+          \n\n[✅ Received a Webhook - ${config.version}]\n\nRepository: ${repositoryFullName}\n\nCommit by 🧑‍💻${committer}\n[${commitMessage}]${addedSection}${modifiedSection}${removedSection}${relevantLink}
         `,
           );
         })

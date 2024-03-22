@@ -1,6 +1,8 @@
 export const formatSection = (array: any, title: string) => {
   if (array.length > 0) {
-    return `${title}:\n${array.join('\n')}`;
+    const formattedArray = array.map((item: any) => ` - ${item}`);
+
+    return `${title}:\n${formattedArray.join('\n')}`;
   }
   return '';
 };
