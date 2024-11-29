@@ -3,11 +3,10 @@ import cors from 'cors';
 import express, { NextFunction, Request, Response } from 'express';
 import mongoose from 'mongoose';
 import requestIp from 'request-ip';
-
 import config from './config';
-import Repository from './models/repository';
-import { formatSection } from './utils/formatSection';
-import { sendTelegram } from './utils/sendTelegram';
+import router from './routes';
+
+import './model/repository';
 
 const app = express();
 
@@ -39,64 +38,7 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   res.status(500).send('Server Error');
 });
 
-app.get('/', (req, res, next) => {
-  return res.status(200).send({ message: 'Hello World' });
-});
-
-app.post(
-  '/webhook',
-  async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const payload = req.body;
-
-      const repositoryName = payload.repository.name;
-      const repositoryFullName = payload.repository.full_name;
-
-      const commits = payload.head_commit;
-      const committer = commits.committer.name || 'GitHub';
-      const commitMessage = commits.message;
-      const url = commits.url;
-
-      const added = commits.added;
-      const modified = commits.modified;
-      const removed = commits.removed;
-
-      const addedSection =
-        added.length > 0
-          ? `\n\n\n${formatSection(added, '📣 Added Files')}`
-          : '';
-      const modifiedSection =
-        modified.length > 0
-          ? `\n\n\n${formatSection(modified, '✨ Changed Files')}`
-          : '';
-      const removedSection =
-        removed.length > 0
-          ? `\n\n\n${formatSection(removed, '🔥 Removed Files')}`
-          : '';
-
-      const relevantLink = url ? `\n\n\n🔗 Relevant Links\n${url}` : '';
-
-      const repository = await Repository.findOne({
-        name: repositoryName,
-      })
-        .then((repo) => {
-          sendTelegram(
-            repo?.chat_id,
-            `
-          \n\n[✅ Received a Webhook - ${config.version}]\n\nRepository: ${repositoryFullName}\n\nCommit by 🧑‍💻${committer}\n[${commitMessage}]${addedSection}${modifiedSection}${removedSection}${relevantLink}
-        `,
-          );
-        })
-        .catch((err) => {
-          console.log('repository error: ', err);
-        });
-
-      res.status(200).send('Webhook received!');
-    } catch (error) {
-      next(error);
-    }
-  },
-);
+app.use('/', router);
 
 // 서버 시작
 app.listen(config.port, () => {
