@@ -5,8 +5,7 @@ import mongoose from 'mongoose';
 import requestIp from 'request-ip';
 import config from './config';
 import router from './routes';
-
-import './model/repository';
+import './@model/index';
 
 const app = express();
 

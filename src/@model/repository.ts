@@ -17,7 +17,10 @@ const RepositorySchema = new Schema(
       require: true,
     },
     meta: {
-      slack: {},
+      slack: {
+        token: { type: String },
+        channel_id: { type: String },
+      },
     },
     // branch - array
   },
