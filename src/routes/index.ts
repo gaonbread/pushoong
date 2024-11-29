@@ -3,6 +3,6 @@ import repositoryRouter from './repository';
 
 const router = express.Router();
 
-router.use('/webhook', repositoryRouter);
+router.use('/', repositoryRouter);
 
 export default router;
