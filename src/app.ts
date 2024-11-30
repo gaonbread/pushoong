@@ -3,9 +3,10 @@ import cors from 'cors';
 import express, { NextFunction, Request, Response } from 'express';
 import mongoose from 'mongoose';
 import requestIp from 'request-ip';
+
+import './@model/index';
 import config from './config';
 import router from './routes';
-import './@model/index';
 
 const app = express();
 
@@ -22,7 +23,7 @@ mongoose
   .then(() => console.log('✅ Connected to Mongo'))
   .catch((err) => console.error('❌ Not Connected to Mongo: ', err));
 
-// IP 주소 확인
+// TODO: 악용 사례 방지를 위해 IP 주소 확인
 app.use((req: Request, res: Response, next: NextFunction) => {
   const clientIP: any = requestIp.getClientIp(req);
 
@@ -33,8 +34,11 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 
 // error
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  console.error(err);
-  res.status(500).send('Server Error');
+  // console.error(err);
+  res.status(500).send({
+    message: 'Server Error',
+    error: err,
+  });
 });
 
 app.use('/', router);

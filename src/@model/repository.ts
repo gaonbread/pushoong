@@ -1,13 +1,15 @@
 import mongoose, { Schema } from 'mongoose';
-import { ISlack } from './interface/messenger';
+import { ISlack, ITelegram } from './interface/messenger';
 
 interface IMeta {
   slack?: ISlack;
+  telegram?: ITelegram;
 }
 
-interface IRepository extends Document {
+export interface IRepository extends Document {
   name: string;
   meta: IMeta;
+  branch: string[];
 }
 
 const RepositorySchema = new Schema(
@@ -22,7 +24,7 @@ const RepositorySchema = new Schema(
         channel_id: { type: String },
       },
     },
-    // branch - array
+    branch: { type: [String] },
   },
   {
     collection: 'repositories',

@@ -1,4 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
+import { GithubService } from '../github/service';
+import { formatMessage } from '../utils/formatMessage';
+import { sendSlack } from '../utils/sendSlack';
+import { RepositoryService } from './service';
 
 export class RepositoryController {
   static async getHello(req: Request, res: Response, next: NextFunction) {
@@ -10,21 +14,47 @@ export class RepositoryController {
   }
 
   // webhook 전송
-  static async handleWebhook(req: Request, res: Response, next: NextFunction) {
+  static async WebhookPush(req: Request, res: Response, next: NextFunction) {
     try {
       const payload = req.body;
 
-      console.log('req:::::', req);
-      console.log('payload:::::', payload);
+      const { repositoryName, branch, commits } =
+        await GithubService.formatWebhookMessage(payload);
 
-      // const { repositoryName, message } =
-      //   await GithubService.formatWebhookMessage(payload);
+      // 레포지토리 맞는 이름 찾기
+      const repository = await RepositoryService.findRepository(repositoryName);
 
-      // console.log(repositoryName, message);
+      // push alert 브랜치 포함 여부 찾기
+      const branchInfo = await RepositoryService.findBranchInclude(
+        branch,
+        repository,
+      );
 
-      // return res.status(200).send({ repositoryName, message });
+      const message = await formatMessage({
+        branch: branchInfo.branchName,
+        commits,
+        repositoryName,
+      });
+
+      if (branchInfo.isBranchIncluded) {
+        if (repository?.meta.slack) {
+          // console.log('slack 존재');
+          sendSlack({
+            token: repository.meta.slack.token,
+            channel_id: repository.meta.slack.channel_id,
+            message: message,
+          });
+        }
+        if (repository?.meta.telegram) {
+          // console.log('telegram 존재');
+        }
+      }
+
       return res.status(200).send({
-        body: payload,
+        // branch,
+        // repositoryName,
+        repository,
+        branchInfo,
       });
     } catch (error) {
       next(error);
