@@ -13,6 +13,8 @@ export class RepositoryController {
   static async handleWebhook(req: Request, res: Response, next: NextFunction) {
     try {
       const payload = req.body;
+
+      console.log('req:::::', req);
       console.log('payload:::::', payload);
 
       // const { repositoryName, message } =
