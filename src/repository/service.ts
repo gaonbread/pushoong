@@ -3,9 +3,11 @@ import Repository, { IRepository } from '../@model/repository';
 export class RepositoryService {
   /** 레포지토리 찾기 */
   static async findRepository(repositoryFullName: string) {
-    const repository = await Repository.findOne({
-      name: repositoryFullName,
-    });
+    const repository = await Repository.findOne(
+      { name: repositoryFullName },
+      null,
+      { readConcern: { level: 'majority' } }, // Read concern 설정
+    );
 
     return repository;
   }

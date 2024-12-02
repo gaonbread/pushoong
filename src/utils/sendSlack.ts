@@ -10,19 +10,21 @@ export const sendSlack = ({
   message: any;
 }) => {
   try {
-    axios
-      .post(
-        `https://slack.com/api/chat.postMessage?channel=${channel_id}&blocks=${message}&pretty=1`,
-        null,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      )
-      .then((res) => {
-        console.log('슬랙 response =>', res.data);
-      });
+    // axios
+    //   .post(
+    //     `https://slack.com/api/chat.postMessage?channel=${channel_id}&blocks=${message}&pretty=1`,
+    //     null,
+    //     {
+    //       headers: {
+    //         Authorization: `Bearer ${token}`,
+    //       },
+    //     },
+    //   )
+    //   .then((res) => {
+    //     console.log('슬랙 response =>', res.data);
+    //   });
+
+    console.log('slack message =>', token, channel_id, message);
   } catch (error) {
     console.log('slack 보내기 실패 => ', error);
     throw error;
