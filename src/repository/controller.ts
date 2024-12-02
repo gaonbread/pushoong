@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { GithubService } from '../github/service';
-import { formatMessage } from '../utils/formatMessage';
+import { formatMessage, formatMessageForSlack } from '../utils/formatMessage';
 import { sendSlack } from '../utils/sendSlack';
 import { RepositoryService } from './service';
 
@@ -30,15 +30,14 @@ export class RepositoryController {
         repository,
       );
 
-      const message = await formatMessage({
+      const message = await formatMessageForSlack({
+        repositoryName,
         branch: branchInfo.branchName,
         commits,
-        repositoryName,
       });
 
       if (branchInfo.isBranchIncluded) {
         if (repository?.meta.slack) {
-          // console.log('slack 존재');
           sendSlack({
             token: repository.meta.slack.token,
             channel_id: repository.meta.slack.channel_id,
@@ -51,10 +50,8 @@ export class RepositoryController {
       }
 
       return res.status(200).send({
-        // branch,
-        // repositoryName,
-        repository,
-        branchInfo,
+        status: true,
+        message: 'success',
       });
     } catch (error) {
       next(error);

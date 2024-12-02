@@ -1,6 +1,6 @@
 export class GithubService {
   static async formatWebhookMessage(payload: any) {
-    const { repository, sender, commits, ref } = payload;
+    const { repository, sender, commits, ref, head_commit } = payload;
 
     const repositoryName = repository.name;
     const repositoryFullName = repository.full_name;
@@ -8,7 +8,7 @@ export class GithubService {
     return {
       branch: ref,
       repositoryName: repositoryFullName,
-      commits,
+      commits: head_commit,
     };
   }
 }
