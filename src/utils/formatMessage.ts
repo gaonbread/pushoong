@@ -44,6 +44,10 @@ export const formatMessageForSlack = async ({
   branch: string;
   commits: any;
 }) => {
+  const now = new Date();
+  const formattedDate = now.toLocaleDateString(); // 예: '2023-10-12'
+  const formattedTime = now.toLocaleTimeString(); // 예: '10:30:15 AM'
+
   const commitMessage = commits?.message;
   const url = commits?.url;
 
@@ -69,7 +73,7 @@ export const formatMessageForSlack = async ({
       type: 'section',
       text: {
         type: 'mrkdwn',
-        text: `[ *${branch}* branch가 업데이트 되었습니다 ]\nRepository: *${repositoryName}*\n\nCommit by 🧑‍💻${committer}\n\ncommit message: ${commitMessage}`,
+        text: `\n\n${formattedDate} ${formattedTime}\n\n[ *${branch}* branch가 업데이트 되었습니다 ]\nRepository: *${repositoryName}*\n\nCommit by 🧑‍💻${committer}\n\ncommit message: ${commitMessage}`,
       },
     },
     {
