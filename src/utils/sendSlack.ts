@@ -9,6 +9,8 @@ export const sendSlack = ({
   channel_id: string;
   message: any;
 }) => {
+  console.log('slack => ', token, channel_id);
+
   try {
     axios
       .post(

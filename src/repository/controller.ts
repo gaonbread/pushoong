@@ -18,6 +18,8 @@ export class RepositoryController {
     try {
       const payload = req.body;
 
+      console.log('payload => ', payload);
+
       const { repositoryName, branch, commits } =
         await GithubService.formatWebhookMessage(payload);
 
